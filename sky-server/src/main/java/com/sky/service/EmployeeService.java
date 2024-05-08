@@ -6,6 +6,8 @@ import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.result.PageResult;
 
+import javax.xml.transform.Result;
+
 public interface EmployeeService {
 
     /**
@@ -21,4 +23,8 @@ public interface EmployeeService {
 
 
     void enable_status(Integer status, Long id);
+
+    Employee getById(Long id);
+
+    void update(EmployeeDTO employeeDTO);
 }
