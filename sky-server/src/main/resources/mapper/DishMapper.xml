@@ -34,6 +34,14 @@
         select * from dish where id = #{id}
     </select>
 
+
+    <select id="selectDishWithFlavorById" resultType="DishFlavor">
+        SELECT dish_flavor.* FROM dish LEFT JOIN dish_flavor on dish.id=dish_flavor.dish_id
+        where dish.id=#{id}
+    </select>
+
+
+
     <select id="list" resultType="Dish" parameterType="Dish">
         select * from dish
         <where>
@@ -51,7 +59,7 @@
     </select>
 
 
-    <update id="update">
+    <update id="updateById">
         update dish
         <set>
             <if test="name!=null">name=#{name},</if>
@@ -65,6 +73,23 @@
         </set>
         where id=#{id}
     </update>
+
+
+    <update id="updateDishFlavors">
+        update dish_flavor
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="value!=null">value=#{value},</if>
+            <if test="updateTime!=null">update_time=#{updateTime},</if>
+            <if test="updateUser!=null">update_user=#{updateUser},</if>
+        </set>
+            where dish_id in
+        <foreach collection="flavors" item="flavor" open="(" close=")" separator=",">
+            #{flavor.dishId}
+        </foreach>
+    </update>
+
+
 
     <select id="countByMap" resultType="java.lang.Integer">
         select count(id) from dish

@@ -1,10 +1,13 @@
 package com.sky.controller.admin;
 
+import com.sky.constant.MessageConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +53,26 @@ public class DishController {
         return delete;
     }
 
+    /**
+     * 修改菜品信息
+     */
+    @PutMapping
+    public Result update(@RequestBody DishDTO dishDTO) {
+        dishService.update(dishDTO);
+        return Result.success("菜品信息修改成功");
+    }
+
+    @GetMapping("/{id}")
+    public Result<DishVO> list(@PathVariable Long id) {
+        DishVO dishVO = dishService.selectById(id);
+        return Result.success(dishVO);
+    }
+
+    @PostMapping("/status/{status}")
+    public Result updateStatus(@PathVariable Integer status,Long id) {
+
+        dishService.updateStatus(status,id);
+        return Result.success(MessageConstant.DISH_ON_SALE);
+    }
 
 }
