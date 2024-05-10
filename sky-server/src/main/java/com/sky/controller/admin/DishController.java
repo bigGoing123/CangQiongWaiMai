@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @Slf4j
@@ -39,6 +41,14 @@ public class DishController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 删除菜品
+     */
+    @DeleteMapping
+    public Result delete(@RequestParam("ids") List<Long> ids) {
+        Result delete = dishService.delete(ids);
+        return delete;
+    }
 
 
 }
