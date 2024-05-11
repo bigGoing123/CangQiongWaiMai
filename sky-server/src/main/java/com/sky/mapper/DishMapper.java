@@ -4,15 +4,12 @@ import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
-import com.sky.entity.DishFlavor;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
-import org.apache.ibatis.annotations.Insert;
+import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -26,22 +23,39 @@ public interface DishMapper {
     Integer countByCategoryId(Long categoryId);
 
 
-
-    @AutoFill(value = OperationType.INSERT)
+    /**
+     * 插入菜品
+     * @param dish
+     */
+    @AutoFill(OperationType.INSERT)
     void insert(Dish dish);
 
     Page<DishVO> pageQuery(DishPageQueryDTO dto);
 
+    @Select("select * from dish where id=#{id}")
+    Dish getById(Long id);
+
+    List<Dish> queryUnsale(List<Long> ids);
+
     void deleteBatch(List<Long> ids);
 
-    Dish selectById(Long id);
+    @AutoFill(OperationType.UPDATE)
+    void update(Dish dish);
 
-    @AutoFill(value = OperationType.UPDATE)
-    void updateDishFlavors(List<DishFlavor> flavors);
+    List<Dish> list(Dish dish);
 
-    ArrayList<DishFlavor> selectDishWithFlavorById(Long id);
+    /**
+     * 根据套餐id查询菜品
+     * @param setmealId
+     * @return
+     */
+    @Select("select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{setmealId}")
+    List<Dish> getBySetmealId(Long setmealId);
 
-
-    @AutoFill(value = OperationType.UPDATE)
-    void updateById(Dish dish);
+    /**
+     * 根据条件统计菜品数量
+     * @param map
+     * @return
+     */
+    Integer countByMap(Map map);
 }
