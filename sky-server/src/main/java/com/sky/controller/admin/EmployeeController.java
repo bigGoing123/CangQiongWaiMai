@@ -34,8 +34,6 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
-    private EmployeeMapper employeeMapper;
-    @Autowired
     private JwtProperties jwtProperties;
 
     /**

@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 
-@RestController
+@RestController("adminDishController")
 @RequestMapping("/admin/dish")
 @Api(tags = "菜品管理")
 public class DishController {
@@ -71,6 +72,7 @@ public class DishController {
 
     @PostMapping("/status/{status}")
     @ApiOperation("启用或禁用菜品")
+    @CacheEvict(cacheNames = "dish", allEntries = true)
     public Result<String> startOrStop(@PathVariable("status") Integer status, Long id) {
         dishService.startOrStop(status, id);
 
