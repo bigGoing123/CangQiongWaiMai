@@ -27,7 +27,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private DishMapper dishMapper;
     @Autowired
     private SetmealMapper setmealMapper;
-    @Transactional
+
+
+    /**
+     * 查看购物车
+     */
+    public List<ShoppingCart> list() {
+        //查询当前用户的购物车
+        Long userId = BaseContext.getCurrentId();
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .userId(userId)
+                .build();
+        return shoppingCartMapper.list(shoppingCart);
+    }
+
     public void add(ShoppingCartDTO shoppingCartDTO) {
         //判断当前加入到购物车的商品是否已经存在于购物车中
         ShoppingCart shoppingCart=new ShoppingCart();
@@ -48,20 +61,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             if(shoppingCartDTO.getDishId()!=null){
                 //是菜品
                 Dish dish = dishMapper.getById(shoppingCartDTO.getDishId());
-                shoppingCart.setDishId(dish.getId() );
-                shoppingCart.setName(dish.getName());
-
+//                shoppingCart.setDishId(dish.getId() );
+//                shoppingCart.setName(dish.getName());
+//
+//                shoppingCart.setAmount(dish.getPrice());
+//                shoppingCart.setImage(dish.getImage());
+                BeanUtils.copyProperties(dish,shoppingCart);
                 shoppingCart.setAmount(dish.getPrice());
-                shoppingCart.setImage(dish.getImage());
             }
             else {
                 Setmeal setmeal = setmealMapper.getById(shoppingCartDTO.getSetmealId());
-                shoppingCart.setSetmealId(setmeal.getId());
-                shoppingCart.setName(setmeal.getName());
+//                shoppingCart.setSetmealId(setmeal.getId());
+//                shoppingCart.setName(setmeal.getName());
+//                shoppingCart.setAmount(setmeal.getPrice());
+//                shoppingCart.setImage(setmeal.getImage());
+                BeanUtils.copyProperties(setmeal,shoppingCart);//这里需要注意必填字段要写，否则即使sql执行了但是必填字段为null还是无法插入
                 shoppingCart.setAmount(setmeal.getPrice());
-                shoppingCart.setImage(setmeal.getImage());
-                //TODO 这里有个问题就是，用set方法就可以插入，但是用对象拷贝，最后没法插入数据库
-//                BeanUtils.copyProperties(setmeal,shoppingCart);
             }
 
             shoppingCart.setNumber(1);
