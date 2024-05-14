@@ -28,6 +28,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private SetmealMapper setmealMapper;
 
+    public void clean() {
+        //获取当前用户的id
+        Long userId= BaseContext.getCurrentId();
+        shoppingCartMapper.delete(userId);
+    }
 
     /**
      * 查看购物车
