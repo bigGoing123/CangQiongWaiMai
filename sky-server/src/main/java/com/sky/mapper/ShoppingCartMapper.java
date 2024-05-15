@@ -22,6 +22,11 @@ public interface ShoppingCartMapper {
                 "values(#{name}, #{image}, #{userId}, #{dishId}, #{setmealId}, #{dishFlavor}, #{amount}, #{createTime})")
     void insert(ShoppingCart shoppingCart);
 
-    @Delete("delete from shopping_cart where user_id=#{userId}")
-    void delete(Long UserId);
+
+    void delete(ShoppingCart shoppingCart);
+
+    @Delete("delete from shopping_cart where user_id = #{userId}")
+    void deleteByUserId(Long userId) ;
+
+
 }
