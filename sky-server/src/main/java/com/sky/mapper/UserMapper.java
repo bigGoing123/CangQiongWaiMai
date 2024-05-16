@@ -19,4 +19,5 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{userId}")
     User selectByUserId(Long userId);
+
 }

@@ -12,6 +12,7 @@ spring:
       url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${sky.datasource.username}
       password: ${sky.datasource.password}
+#      use-ping-method: false
   redis:
     port: ${sky.redis.port}
     host: ${sky.redis.host}
@@ -49,3 +50,10 @@ sky:
   wechat:
     appid: ${sky.wechat.appid}
     secret: ${sky.wechat.secret}
+    mchid: ${sky.dev.wechat.mchid}
+    mchSerialNo: ${sky.dev.wechat.mchSerialNo}
+    privateKeyFilePath: ${sky.dev.wechat.privateKeyFilePath}
+    apiV3Key: ${sky.wechat.apiVersion3Key}
+    weChatPayCertFilePath: ${sky.dev.wechat.weChatPayCertFilePath}
+    notifyUrl: ${sky.dev.wechat.notifyUr1}
+    refundNotifyUrl: ${sky.dev.wechat.refundNotifyUr1}
