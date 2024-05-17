@@ -5,10 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersConfirmDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -17,6 +14,7 @@ import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import com.sky.websocket.WebSocketServer;
@@ -134,6 +132,60 @@ public class OrderServiceImpl implements OrderService {
         return vo;
     }
 
+
+    @Override
+    public void delivery(Long id) {
+        // 设置订单状态为配送中
+        Orders orders = orderMapper.getById(id);
+        orders.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        orderMapper.update(orders);
+    }
+
+    @Override
+    public void cancel(OrdersRejectionDTO ordersRejectionDTO) {
+        Long id = ordersRejectionDTO.getId();
+        Orders order = orderMapper.getById(id);
+        order.setStatus(Orders.CANCELLED);
+        order.setCancelReason(ordersRejectionDTO.getRejectionReason());
+        order.setCancelTime(LocalDateTime.now());
+        orderMapper.update(order);
+    }
+
+    @Override
+    public OrderStatisticsVO statistics() {
+        // 获取当前登录用户id
+        Long userId = BaseContext.getCurrentId();
+
+        // 查询所有用户的所有订单
+//        Orders orders = new Orders();
+//        orders.setUserId(userId);
+        List<Orders> ordersList = orderMapper.pageQueryFromAdmin(null);
+
+        // 统计订单数量
+        int confirmed= 0;
+        int deliveryInProgress=0;
+        int toBeConfirmed=0;
+        for(Orders order: ordersList) {
+            if (order.getStatus() == Orders.CONFIRMED) {
+                confirmed++;
+            } else if (order.getStatus() == Orders.DELIVERY_IN_PROGRESS) {
+                deliveryInProgress++;
+            } else if (order.getStatus() == Orders.TO_BE_CONFIRMED) {
+                toBeConfirmed++;
+            }
+        }
+
+        // 封装VO返回前端
+        OrderStatisticsVO orderStatisticsVO =OrderStatisticsVO
+                .builder()
+                .confirmed(confirmed)
+                .toBeConfirmed(toBeConfirmed)
+                .deliveryInProgress(deliveryInProgress)
+                .build();
+
+
+        return orderStatisticsVO;
+    }
 
     @Override
     public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {

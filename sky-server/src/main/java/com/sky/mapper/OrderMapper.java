@@ -30,6 +30,10 @@ public interface OrderMapper {
      */
     @Select("select * from orders where number = #{orderNumber}")
     Orders getByNumber(String orderNumber);
+    @Select("select * from orders where id = #{id}")
+    Orders getById(Long id);
+    @Select("select * from orders where user_id = #{userId}")
+    List<Orders> getByUserId(Long userId);
 
     /**
      * 修改订单信息
@@ -49,11 +53,9 @@ public interface OrderMapper {
 
     void updateDeliveringByIds(Integer completed, List<Long> ids);
 
-    @Select("select * from orders where id = #{id}")
-    Orders getById(Long id);
+    
 
     Page<Orders> pageQueryFromUser(OrdersPageQueryDTO ordersPageQueryDTO);
 
     Page<Orders> pageQueryFromAdmin(OrdersPageQueryDTO ordersPageQueryDTO);
-
 }
