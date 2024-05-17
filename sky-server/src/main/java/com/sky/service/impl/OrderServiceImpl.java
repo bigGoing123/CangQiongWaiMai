@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
@@ -135,6 +136,47 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
+    public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+        // 设置分页
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+
+        // 设置当前登录用户id
+        Long userId= BaseContext.getCurrentId();
+        ordersPageQueryDTO.setUserId(userId);
+
+        // 分页条件查询
+        Page<Orders> page = orderMapper.pageQueryFromAdmin(ordersPageQueryDTO);
+
+        List<OrderVO> list = new ArrayList<>();
+
+        //查询出订单明细，并封装入OrderVO进行响应
+        if (page != null && page.getTotal() > 0) {
+            for (Orders orders : page) {
+                Long orderId = orders.getId();// 订单id
+
+                // 查询订单明细
+                List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(orderId);
+
+                OrderVO orderVO = new OrderVO();
+                BeanUtils.copyProperties(orders, orderVO);
+                orderVO.setOrderDetailList(orderDetails);
+
+                list.add(orderVO);
+            }
+        }
+        return new PageResult(page.getTotal(), list);
+    }
+
+    @Override
+    public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
+        // 设置订单状态为已接单（3）
+        Orders orders = orderMapper.getById(ordersConfirmDTO.getId());
+        orders.setStatus(Orders.CONFIRMED);
+        orderMapper.update(orders);
+
+    }
+
+    @Override
     public OrderVO getOrderDetail(Long id) {
 
         // 根据id查询订单
@@ -168,7 +210,7 @@ public class OrderServiceImpl implements OrderService {
         ordersPageQueryDTO.setUserId(userId);
 
         // 分页条件查询
-        Page<Orders> page = orderMapper.pageQuery(ordersPageQueryDTO);
+        Page<Orders> page = orderMapper.pageQueryFromUser(ordersPageQueryDTO);
 
         List<OrderVO> list = new ArrayList<>();
 

@@ -65,7 +65,7 @@ public class OrderController {
      */
     @GetMapping("/historyOrders")
     @ApiOperation("历史订单查询")
-    public Result<PageResult> page(Integer page, Integer pageSize, Integer status) {
+    public Result<PageResult> historyOrders(Integer page, Integer pageSize, Integer status) {
         OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
         ordersPageQueryDTO.setPage(page);
         ordersPageQueryDTO.setPageSize(pageSize);
