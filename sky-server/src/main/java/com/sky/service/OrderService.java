@@ -1,9 +1,12 @@
 package com.sky.service;
 
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 
 public interface OrderService {
     OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO);
@@ -20,4 +23,9 @@ public interface OrderService {
      */
     void paySuccess(String outTradeNo);
 
+    void reminder(Long id);
+
+    PageResult pageQuery4User(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    OrderVO getOrderDetail(Long id);
 }
