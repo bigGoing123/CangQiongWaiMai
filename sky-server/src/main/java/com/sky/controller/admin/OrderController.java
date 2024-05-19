@@ -58,9 +58,13 @@ public class OrderController {
 
     @PutMapping("/cancel")
     public Result cancel(@RequestBody OrdersRejectionDTO ordersRejectionDTO) {
-
-
         orderService.cancel(ordersRejectionDTO);
+        return Result.success();
+    }
+
+    @PutMapping("/complete/{id}")
+    public Result complete(@PathVariable Long id) {
+        orderService.complete(id);
         return Result.success();
     }
 

@@ -1,6 +1,8 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.LocalDateTime2TurpleDTO;
+import com.sky.dto.OrderAmount;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderVO;
@@ -9,7 +11,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -58,4 +62,16 @@ public interface OrderMapper {
     Page<Orders> pageQueryFromUser(OrdersPageQueryDTO ordersPageQueryDTO);
 
     Page<Orders> pageQueryFromAdmin(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    List<OrderAmount> countSumByDay(List<LocalDateTime2TurpleDTO> dateList);
+
+
+
+    Double sumByMap(Map map);
+
+    List<Integer> sumValidNumByDay(List<LocalDateTime2TurpleDTO> dateList);
+
+    List<Integer> countOrderNumByDay(List<LocalDateTime2TurpleDTO> dateList);
+
+    Integer countOrderNumByMap(Map<String, Object> map);
 }

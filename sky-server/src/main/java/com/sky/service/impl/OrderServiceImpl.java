@@ -142,6 +142,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void complete(Long id) {
+        // 设置订单状态为已完成
+        Orders orders = orderMapper.getById(id);
+        orders.setStatus(Orders.COMPLETED);
+        orderMapper.update(orders);
+    }
+
+    @Override
     public void cancel(OrdersRejectionDTO ordersRejectionDTO) {
         Long id = ordersRejectionDTO.getId();
         Orders order = orderMapper.getById(id);
